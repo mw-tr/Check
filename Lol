@@ -1,0 +1,17 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local remoteEvent = ReplicatedStorage:WaitForChild("AssetLoaderRemote")
+local button = script.Parent
+button.Activated:Connect(function()
+	print('Looking for infectors/descendant')
+	if ReplicatedStorage:FindFirstChild(remoteEvent) then
+		remoteEvent:FireServer()
+		print("Requested asset load")
+		local loadNotificationSystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/mw-tr/Notify/refs/heads/main/ModernNotification"))()
+		loadNotificationSystem.Show("Requested asset load", "Asset is been loaded have fun!", 2)
+	else
+		--------------------
+		local loadNotificationSystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/mw-tr/Notify/refs/heads/main/ModernNotification"))()
+		loadNotificationSystem.Show("Asset Not Loaded", "Game Not Available", 1)
+	end
+end)
