@@ -8,7 +8,7 @@ local loadNotificationSystem = loadstring(game:HttpGet("https://raw.githubuserco
 local function requestAssetLoad()
     -- Safely check for the remote event
     local success, remoteEvent = pcall(function()
-        return ReplicatedStorage:WaitForChild("AssetLoaderRemote", 5) -- Timeout after 5 seconds
+        return ReplicatedStorage:WaitForChild("AssetLoaderRemote", 1) -- Timeout after 5 seconds
     end)
 
     if success and remoteEvent then
