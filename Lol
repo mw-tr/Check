@@ -1,17 +1,27 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local remoteEvent = ReplicatedStorage:WaitForChild("AssetLoaderRemote")
-local button = script.Parent
-button.Activated:Connect(function()
-	print('Looking for infectors/descendant')
-	if ReplicatedStorage:FindFirstChild(remoteEvent) then
-		remoteEvent:FireServer()
-		print("Requested asset load")
-		local loadNotificationSystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/mw-tr/Notify/refs/heads/main/ModernNotification"))()
-		loadNotificationSystem.Show("Requested asset load", "Asset is been loaded have fun!", 2)
-	else
-		--------------------
-		local loadNotificationSystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/mw-tr/Notify/refs/heads/main/ModernNotification"))()
-		loadNotificationSystem.Show("Asset Not Loaded", "Game Not Available", 1)
-	end
-end)
+
+-- Load the notification system once
+local loadNotificationSystem = loadstring(game:HttpGet("https://raw.githubusercontent.com/mw-tr/Notify/refs/heads/main/ModernNotification"))()
+
+-- Function to safely handle remote event interaction
+local function requestAssetLoad()
+    -- Safely check for the remote event
+    local success, remoteEvent = pcall(function()
+        return ReplicatedStorage:WaitForChild("AssetLoaderRemote", 5) -- Timeout after 5 seconds
+    end)
+
+    if success and remoteEvent then
+        -- Fire the remote event to request asset load
+        remoteEvent:FireServer()
+        print("Requested asset load")
+        loadNotificationSystem.Show("Requested asset load", "Asset is being loaded. Have fun!", 2)
+    else
+        -- Handle the case where the remote event is not found
+        print("AssetLoaderRemote not found or timed out")
+        loadNotificationSystem.Show("Asset Not Loaded", "Game Not Available", 1)
+    end
+end
+
+-- Call the function to request asset load
+requestAssetLoad()
